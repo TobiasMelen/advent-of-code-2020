@@ -1,6 +1,9 @@
 mod day1;
+mod day2;
 mod utils;
 use day1::main as day1;
+use day2::main as day2;
+
 use regex::Regex;
 use std::env;
 
@@ -18,6 +21,7 @@ fn main() {
         .unwrap_or(1);
     match day {
         1 => day1(),
+        2 => day2(),
         _ => println!("ERROR: Day {} does not have a solution!", day),
     }
 }
