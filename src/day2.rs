@@ -2,10 +2,9 @@ use crate::utils::read_file_lines;
 
 pub fn main() {
     let file_lines = read_file_lines("day2.txt").unwrap();
-    let input = file_lines.iter().map(|str| str as &str).collect::<Vec<_>>();
-    let one_star = count_valid_passwords(&input, &get_password_validity_one_star);
+    let one_star = count_valid_passwords(&file_lines, &get_password_validity_one_star);
     println!("One star result is {}", one_star);
-    let two_star = count_valid_passwords(&input, &get_password_validity_two_star);
+    let two_star = count_valid_passwords(&file_lines, &get_password_validity_two_star);
     println!("Two star result is {}", two_star);
 }
 
@@ -16,10 +15,13 @@ struct RuledPassword<'a> {
     max: i32,
 }
 
-fn count_valid_passwords(passwords: &[&str], validator: &dyn Fn(&RuledPassword) -> bool) -> usize {
+fn count_valid_passwords<S: AsRef<str>>(
+    passwords: &[S],
+    validator: &dyn Fn(&RuledPassword) -> bool,
+) -> usize {
     passwords
         .iter()
-        .map(|value| extract_variables(value))
+        .map(|value| extract_variables(value.as_ref()).unwrap())
         .filter(|value| validator(value))
         .count()
 }
@@ -54,18 +56,18 @@ fn get_password_validity_two_star(ruled: &RuledPassword) -> bool {
     (max_matches && !min_matches) || (min_matches && !max_matches)
 }
 
-fn extract_variables(input: &str) -> RuledPassword {
+fn extract_variables(input: &str) -> Option<RuledPassword> {
     let mut result = input.split(" ");
-    let mut min_max = result
-        .next()
-        .map(|val| val.split("-").map(|digit| digit.parse::<i32>().unwrap()))
-        .unwrap();
-    RuledPassword {
-        char: result.next().unwrap().chars().next().unwrap(),
-        password: result.next().unwrap(),
-        min: min_max.next().unwrap(),
-        max: min_max.next().unwrap(),
-    }
+    let mut min_max = result.next().map(|val| {
+        val.split("-")
+            .map(|digit| digit.parse::<i32>().unwrap_or(0))
+    })?;
+    Some(RuledPassword {
+        char: result.next()?.chars().next()?,
+        password: result.next()?,
+        min: min_max.next()?,
+        max: min_max.next()?,
+    })
 }
 
 #[cfg(test)]

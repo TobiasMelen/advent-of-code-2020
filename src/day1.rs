@@ -8,41 +8,40 @@ pub fn main() {
     println!("Two star result is {:?}", two_start_result.unwrap_or(0));
 }
 
-fn find_result_recursive(
-    inputs: &[i32],
-    sum_for: i32,
-    addends: usize,
-    start_index: usize,
-    adds: &[i32],
-) -> Option<i32> {
-    inputs
-        .iter()
-        .skip(start_index)
-        .enumerate()
-        .find_map(|(index, item)| {
-            let mut result_set = adds.to_vec();
-            result_set.push(*item);
-            if adds.len() < addends - 1 {
-                find_result_recursive(
-                    inputs,
-                    sum_for,
-                    addends,
-                    start_index + index,
-                    &result_set,
-                )
-            } else {
-                let sum = result_set.iter().sum::<i32>();
-                if sum == sum_for {
-                    Some(result_set.iter().fold(1, |acc, item| acc * item))
+fn solve(values: &[i32], target_sum: i32, parts_to_sum: i32) -> Option<i32> {
+    struct Input<'a> {
+        values: &'a [i32],
+        target_sum: i32,
+        parts_to_sum: i32,
+    }
+    fn recurse(input: &Input, start_index: usize, acc_sum: i32, depth: i32) -> Option<i32> {
+        input
+            .values[start_index..]
+            .iter()
+            .enumerate()
+            .find_map(|(index, item)| {
+                if depth == input.parts_to_sum {
+                    if acc_sum + item == input.target_sum {
+                        Some(*item)
+                    } else {
+                        None
+                    }
                 } else {
-                    None
+                    recurse(input, start_index + index, acc_sum + item, depth + 1)
+                        .map(|result| result * item)
                 }
-            }
-        })
-}
-
-fn solve(inputs: &[i32], sum_for: i32, addends: usize) -> Option<i32> {
-    find_result_recursive(inputs, sum_for, addends, 0, &[])
+            })
+    }
+    recurse(
+        &Input {
+            values,
+            target_sum,
+            parts_to_sum,
+        },
+        0,
+        0,
+        1,
+    )
 }
 
 #[cfg(test)]
@@ -57,7 +56,7 @@ mod tests {
 
     #[test]
     fn example_two_star() {
-        let result = solve(&[979, 366, 675], 2020, 3);
+        let result = solve(&[979, 1, 366, 1, 675, 1 , 1], 2020, 3);
         assert_eq!(241861950, result.unwrap());
     }
 }
