@@ -19,7 +19,7 @@ pub fn read_file_lines(file_name: &str) -> Result<Vec<String>, std::io::Error> {
     Ok(result)
 }
 
-fn read_file(file_name: &str) -> Result<String, std::io::Error> {
+pub fn read_file(file_name: &str) -> Result<String, std::io::Error> {
     let mut file = File::open(format!("inputs/{0}", file_name))?;
     let mut file_content = String::new();
     file.read_to_string(&mut file_content)?;
