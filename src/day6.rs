@@ -33,7 +33,7 @@ fn count_collective_yes_answers(answers: &str) -> i32 {
         .count();
     grouped_answers
         .iter()
-        .filter(|(_, answer_count)| **answer_count == (group_participant_count as i32))
+        .filter(|(_, answer_count)| *answer_count == &(group_participant_count as i32))
         .count() as i32
 }
 

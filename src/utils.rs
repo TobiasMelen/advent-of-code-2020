@@ -1,5 +1,19 @@
-use std::fs::File;
-use std::io::prelude::*;
+use std::{fs::File, io::prelude::*};
+
+pub trait SplitOnce {
+    //Not allowed to use Pattern type wtf?
+    fn split_one_time<'a>(&self, pat: &'a str) -> Option<(&str, &str)>;
+}
+
+impl SplitOnce for &str {
+    fn split_one_time<'a>(&'a self, pat: &str) -> Option<(&'a str, &'a str)> {
+        let mut iter = self.split(pat);
+        match (iter.next(), iter.next()) {
+            (Some(value), Some(other_value)) => Some((value, other_value)),
+            _ => None,
+        }
+    }
+}
 
 pub fn read_integer_file(file_name: &str) -> Result<Vec<i32>, std::io::Error> {
     let file_contents = read_file(file_name)?;
