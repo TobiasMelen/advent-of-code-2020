@@ -27,11 +27,19 @@ fn find_first_invalid(data: &[isize], preamble: usize) -> Option<isize> {
 
 fn find_continuous_range_minmax_for_sum(data: &[isize], target_sum: isize) -> Option<isize> {
     data.iter().enumerate().find_map(|(index, _)| {
-        let mut numbers: Vec<isize> = Vec::new();
-        for value in data.iter().skip(index) {
-            numbers.push(*value);
-            match numbers.iter().sum::<isize>() - target_sum {
-                0 => return Some(numbers.iter().min().unwrap() + numbers.iter().max().unwrap()),
+        let mut sequence_sum: isize = 0;
+        let mut sequence_min: isize = 0;
+        let mut sequence_max: isize = 0;
+        for value in data[index..].iter() {
+            sequence_sum += value;
+            if value < &sequence_min {
+                sequence_min = *value
+            };
+            if value > &sequence_max {
+                sequence_max = *value
+            };
+            match sequence_max - target_sum {
+                0 => return Some(sequence_min + sequence_max),
                 d if d > 0 => break,
                 _ => continue,
             }
@@ -42,7 +50,7 @@ fn find_continuous_range_minmax_for_sum(data: &[isize], target_sum: isize) -> Op
 
 #[cfg(test)]
 mod tests {
-    use super::{find_first_invalid, find_continuous_range_minmax_for_sum};
+    use super::{find_continuous_range_minmax_for_sum, find_first_invalid};
 
     static INPUT: &[isize] = &[
         35, 20, 15, 25, 47, 40, 62, 55, 65, 95, 102, 117, 150, 182, 127, 219, 299, 277, 309, 576,
