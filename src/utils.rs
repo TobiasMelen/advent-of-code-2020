@@ -15,12 +15,12 @@ impl SplitOnce for &str {
     }
 }
 
-pub fn read_integer_file(file_name: &str) -> Result<Vec<i32>, std::io::Error> {
+pub fn read_integer_file(file_name: &str) -> Result<Vec<isize>, std::io::Error> {
     let file_contents = read_file(file_name)?;
     let result = file_contents
         .split("\n")
-        .filter_map(|item| item.parse::<i32>().ok())
-        .collect::<Vec<i32>>();
+        .filter_map(|item| item.parse::<isize>().ok())
+        .collect();
     Ok(result)
 }
 

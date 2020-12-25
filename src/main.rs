@@ -6,6 +6,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 mod utils;
 use day1::main as day1;
 use day2::main as day2;
@@ -15,6 +16,7 @@ use day5::main as day5;
 use day6::main as day6;
 use day7::main as day7;
 use day8::main as day8;
+use day9::main as day9;
 
 use regex::Regex;
 use std::env;
@@ -40,6 +42,7 @@ fn main() {
         6 => day6(),
         7 => day7(),
         8 => day8(),
+        9 => day9(),
         _ => println!("ERROR: Day {} does not have a solution!", day),
     }
 }
