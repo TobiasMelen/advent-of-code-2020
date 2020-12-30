@@ -1,4 +1,7 @@
 mod day1;
+mod day10;
+mod day11;
+mod day12;
 mod day2;
 mod day3;
 mod day4;
@@ -9,6 +12,9 @@ mod day8;
 mod day9;
 mod utils;
 use day1::main as day1;
+use day10::main as day10;
+use day11::main as day11;
+use day12::main as day12;
 use day2::main as day2;
 use day3::main as day3;
 use day4::main as day4;
@@ -43,6 +49,9 @@ fn main() {
         7 => day7(),
         8 => day8(),
         9 => day9(),
+        10 => day10(),
+        11 => day11(),
+        12 => day12(),
         _ => println!("ERROR: Day {} does not have a solution!", day),
     }
 }

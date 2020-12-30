@@ -28,18 +28,18 @@ fn find_first_invalid(data: &[isize], preamble: usize) -> Option<isize> {
 fn find_continuous_range_minmax_for_sum(data: &[isize], target_sum: isize) -> Option<isize> {
     data.iter().enumerate().find_map(|(index, _)| {
         let mut sequence_sum: isize = 0;
-        let mut sequence_min: isize = 0;
-        let mut sequence_max: isize = 0;
+        let mut sequence_min = None;
+        let mut sequence_max = None;
         for value in data[index..].iter() {
             sequence_sum += value;
-            if value < &sequence_min {
-                sequence_min = *value
-            };
-            if value > &sequence_max {
-                sequence_max = *value
-            };
-            match sequence_max - target_sum {
-                0 => return Some(sequence_min + sequence_max),
+            sequence_min = sequence_min
+                .map(|min| if value < min { min } else { value })
+                .or(Some(value));
+            sequence_max = sequence_max
+                .map(|max| if value > max { max } else { value })
+                .or(Some(value));
+            match sequence_sum - target_sum {
+                0 => return sequence_min.zip(sequence_max).map(|(min, max)| min + max),
                 d if d > 0 => break,
                 _ => continue,
             }
